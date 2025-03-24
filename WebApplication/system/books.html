@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="js/darktTheme.js"></script>
+    <link rel="stylesheet" href="css/darkTheme.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f4f4f9, #e0e0f0);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Button Styles */
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #003d80);
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #007bff;
+            font-size: 20px;
+        }
+
+        .modal-header .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .modal-header .close:hover {
+            color: #000;
+        }
+
+        /* Form Styles */
+        .input-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-container .icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+
+        .input-container input,
+        .input-container select {
+            width: 100%;
+            padding: 10px 10px 10px 35px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-container input:focus,
+        .input-container select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Card Layout */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            color: #007bff;
+            font-size: 20px;
+        }
+
+        .card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .card .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .card .actions i {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .card .actions i:hover {
+            color: #0056b3;
+        }
+
+        /* Error Message */
+        #error {
+            margin-top: 20px;
+            padding: 10px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px var(--shadow-color);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Button Styles */
+button {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--accent-color), #0056b3);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #0056b3, #003d80);
+    transform: translateY(-2px);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--modal-bg);
+    padding: 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.modal-header h3 {
+    color: var(--accent-color);
+}
+
+.modal-header .close {
+    color: var(--text-color);
+}
+
+/* Input Styles */
+.input-container input,
+.input-container select {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-color);
+}
+
+.input-container .icon {
+    color: var(--icon-color);
+}
+
+/* Card Styles */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.card h3 {
+    color: var(--accent-color);
+}
+
+.card p {
+    color: var(--text-color);
+}
+
+.card .actions i {
+    color: var(--accent-color);
+}
+
+/* Error Message */
+#error {
+    background: #ffebee;
+    color: #c62828;
+}
+    </style>
+</head>
+<body onload="loadThemePreference();">
+    <div class="container">
+        <div class="container-box">
+            <h2>Manage Books</h2>
+            <button id="add-book-button">Add Book</button>
+            <button id="theme-toggle-button" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i> Dark Mode
+            </button>
+        </div>
+
+        <!-- Modal for Add Book Form -->
+        <div id="addBookModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Book</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <form id="book-form">
+                    <div class="input-container">
+                        <i class="fas fa-book icon"></i>
+                        <input type="text" id="book-title" name="book-title" placeholder="Enter book title" required>
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="book-author" name="book-author" placeholder="Enter book author" required>
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-list icon"></i>
+                        <select id="genre" name="genre" required>
+                            <option value="" disabled selected>Select a genre</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Mystery/Thriller">Mystery/Thriller</option>
+                            <option value="Science Fiction/Fantasy">Science Fiction/Fantasy</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Children's Literature">Children's Literature</option>
+                            <option value="Young Adult (YA)">Young Adult (YA)</option>
+                        </select>
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-list icon"></i>
+                        <select id="format" name="format" required>
+                            <option value="" disabled selected>Select a format</option>
+                            <option value="Softcopy">Softcopy</option>
+                            <option value="Hardcopy">Hardcopy</option>
+                        </select>
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-calendar icon"></i>
+                        <input type="text" id="publishedDate" name="publishedDate" placeholder="Enter published date" required>
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-list icon"></i>
+                        <input type="text" id="resourceType" name="resourceType" placeholder="Enter resource type" required>
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="catelogedBy" name="catelogedBy" placeholder="Enter cataloged by" required>
+                    </div>
+                    <button type="submit"><i class="fas fa-plus"></i> Add Book</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error"></div>
+
+        <!-- Card Layout for Books -->
+        <div class="container-box">
+            <h2>Books</h2>
+            <div class="card-container" id="book-cards">
+                <!-- Cards will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById("addBookModal");
+        const addBookButton = document.getElementById("add-book-button");
+        const closeModal = document.querySelector(".close");
+
+        addBookButton.onclick = () => modal.style.display = "flex";
+        closeModal.onclick = () => modal.style.display = "none";
+        window.onclick = (event) => {
+            if (event.target === modal) modal.style.display = "none";
+        };
+
+        // Form submission
+        document.getElementById("book-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const formData = {
+                resourceId: crypto.randomUUID(),
+                title: document.getElementById("book-title").value,
+                author: document.getElementById("book-author").value,
+                genre: document.getElementById("genre").value,
+                format: document.getElementById("format").value,
+                publishedDate: document.getElementById("publishedDate").value,
+                resourceType: document.getElementById("resourceType").value,
+                catelogedBy: document.getElementById("catelogedBy").value,
+            };
+            const accessToken = sessionStorage.getItem("access_token");
+        
+        // console.log(accessToken);
+        if (!accessToken) {
+            // throw new Error("No access token found. Please log in.");
+            window.location.href = "login.html";
+
+        }
+
+        const cleanedToken = accessToken.replace(/^"(.*)"$/, '$1');
+
+            const response = await fetch("/addbook", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${cleanedToken}`
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            console.log(result);
+            document.getElementById("error").innerText = JSON.stringify(result, null, 2);
+            modal.style.display = "none"; // Close modal after submission
+            fetchAndDisplayBooks(); // Refresh the book list
+        });
+
+        // Fetch and display books
+        async function fetchAndDisplayBooks() {
+            try {
+                const accessToken = sessionStorage.getItem("access_token");
+        
+        // console.log(accessToken);
+                if (!accessToken) {
+                    // throw new Error("No access token found. Please log in.");
+                    window.location.href = "login.html";
+
+                }
+
+                const cleanedToken = accessToken.replace(/^"(.*)"$/, '$1');
+
+        
+                const response = await fetch("http://127.0.0.1:8000/listbooks", {
+                    headers: {
+                        "Authorization": `Bearer ${cleanedToken}`
+                    }
+                });
+                if (!response.ok) throw new Error("Failed to fetch data");
+                const books = await response.json();
+
+                const cardContainer = document.getElementById("book-cards");
+                cardContainer.innerHTML = ""; // Clear existing cards
+                books.forEach(book => {
+                    const card = document.createElement("div");
+                    card.className = "card";
+                    card.innerHTML = `
+                        <h3>${book.title}</h3>
+                        <p><strong>Author:</strong> ${book.author}</p>
+                        <p><strong>Genre:</strong> ${book.genre}</p>
+                        <p><strong>Published Date:</strong> ${book.publishedDate}</p>
+                        <p><strong>Resource Type:</strong> ${book.resourceType}</p>
+                        <p><strong>Cataloged By:</strong> ${book.catalogedBy}</p>
+                        <p><strong>Format:</strong> ${book.format}</p>
+                        <div class="actions">
+                            <i class="fas fa-edit"></i>
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    `;
+                    cardContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // Fetch and display books on page load
+        fetchAndDisplayBooks();
+
+        // Toggle theme function
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const themeButton = document.getElementById('theme-toggle-button');
+    const icon = themeButton.querySelector('i');
+
+    if (document.body.classList.contains('dark-mode')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        themeButton.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
+    } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        themeButton.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
+    }
+}
+
+// Save theme preference to localStorage
+function saveThemePreference() {
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+}
+
+// Load theme preference from localStorage
+function loadThemePreference() {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        const themeButton = document.getElementById('theme-toggle-button');
+        themeButton.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
+    }
+}
+
+// Load theme preference when the page loads
+window.onload = loadThemePreference;
+    </script>
+</body>
+</html>

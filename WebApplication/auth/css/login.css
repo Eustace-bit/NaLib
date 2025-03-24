@@ -1,0 +1,147 @@
+/* General styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #007bff, #00bfff); /* Gradient background */
+}
+
+/* Container for side panel and content */
+.content {
+    display: flex;
+    width: 80%;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Side panel styles */
+.sidepanel {
+    flex: 1;
+    background: linear-gradient(135deg, #007bff, #00bfff); /* Gradient background */
+    color: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Header text in side panel */
+.header-text p {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Subtitle in side panel */
+.sidepanel-subtitle p {
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+/* Button in side panel */
+.sidepanel-button button {
+    background-color: #fff;
+    color: #007bff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.sidepanel-button button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+/* Content box styles */
+.content-box {
+    flex: 2;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Content text */
+.content-text p {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Form styles */
+#login-form {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Input box styles */
+.box-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+.box-input:hover {
+    border-color: #007bff;
+}
+
+.box-input i {
+    color: #888;
+    margin-right: 10px;
+}
+
+.box-input input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+    background-color: transparent;
+}
+
+.box-input input::placeholder {
+    color: #aaa;
+}
+
+/* Submit button styles */
+.box-input button {
+    width: 100%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.box-input button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Result message styles */
+.result-message {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ff4444;
+    text-align: center;
+}

@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"borrowId":{"$numberInt":"1"}},"name":"borrowId_1","background":false,"unique":true,"sparse":false}],"uuid":"248058a139b145dbb0b1fff6b8d9f796","collectionName":"borrowedbooks","type":"collection"}

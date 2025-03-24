@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Returned Books</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            color: #333;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+            margin: 5px 0 0;
+        }
+
+        .print-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .print-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .status-past-due {
+            color: #dc3545; /* Red for past due */
+            font-weight: bold;
+        }
+
+        .status-overdue {
+            color: #ffc107; /* Yellow for overdue */
+            font-weight: bold;
+        }
+
+        .status-damaged {
+            color: #dc3545; /* Red for damaged */
+            font-weight: bold;
+        }
+
+        .status-lost {
+            color: #6c757d; /* Gray for lost */
+            font-weight: bold;
+        }
+
+        .notification {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .notification h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .notification p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: #fff;
+                color: #000;
+            }
+
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            .header {
+                display: none; /* Hide header in print */
+            }
+
+            .print-button {
+                display: none; /* Hide print button in print */
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th, td {
+                border: 1px solid #000;
+                padding: 8px;
+            }
+
+            th {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            .notification {
+                background-color: #fff;
+                border: 1px solid #000;
+                margin-top: 20px;
+            }
+        }
+
+        /* Responsive Table */
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h2>Returned Books</h2>
+                <p>Here you can view all the books that have been returned.</p>
+            </div>
+            <button class="print-button" onclick="printReport()">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>
+
+        <table id="returnedBooksTable">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Member Name</th>
+                    <th>Return Date</th>
+                    <th>Transaction Status</th>
+                    <th>Resource Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be populated dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Notifications Section -->
+        <div class="notification" id="notifications">
+            <h3>Notifications</h3>
+            <div id="notificationMessages">
+                <!-- Notifications will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for returned books (replace with API call)
+        const returnedBooks = {
+            returned_books: [
+                {
+                    resourceInfo: { title: "Book 1" },
+                    memberInfo: { fullname: "John Doe" },
+                    returnDate: "2023-10-01",
+                    borrowedDate: "2023-09-25",
+                    status: "Good"
+                },
+                {
+                    resourceInfo: { title: "Book 2" },
+                    memberInfo: { fullname: "Jane Smith" },
+                    returnDate: "2023-10-05",
+                    borrowedDate: "2023-09-28",
+                    status: "Damaged"
+                },
+                {
+                    resourceInfo: { title: "Book 3" },
+                    memberInfo: { fullname: "Alice Johnson" },
+                    returnDate: "2023-10-10",
+                    borrowedDate: "2023-09-30",
+                    status: "Lost"
+                }
+            ]
+        };
+
+        // Function to determine transaction status
+        function getTransactionStatus(returnDate, dueDate) {
+            const returnDateObj = new Date(returnDate);
+            const dueDateObj = new Date(dueDate);
+
+            if (returnDateObj > dueDateObj) {
+                return "Overdue";
+            } else if (returnDateObj < dueDateObj) {
+                return "Past Due";
+            } else {
+                return "On Time";
+            }
+        }
+
+        // Function to display returned books in the table
+        function displayReturnedBooks(data) {
+            const returnedBooks = data.returned_books;
+            const tableBody = document.querySelector("#returnedBooksTable tbody");
+            const notificationMessages = document.getElementById("notificationMessages");
+            tableBody.innerHTML = ""; // Clear existing rows
+            notificationMessages.innerHTML = ""; // Clear existing notifications
+
+            returnedBooks.forEach(book => {
+                const transactionStatus = getTransactionStatus(book.returnDate, book.borrowedDate);
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${book.resourceInfo.title}</td>
+                    <td>${book.memberInfo.fullname}</td>
+                    <td>${book.returnDate}</td>
+                    <td class="${transactionStatus === "Overdue" ? "status-overdue" : transactionStatus === "Past Due" ? "status-past-due" : ""}">
+                        ${transactionStatus}
+                    </td>
+                    <td class="${book.status === "Damaged" ? "status-damaged" : book.status === "Lost" ? "status-lost" : ""}">
+                        ${book.status}
+                    </td>
+                `;
+                tableBody.appendChild(row);
+
+                // Add notifications for damaged or lost resources
+                if (book.status === "Damaged" || book.status === "Lost") {
+                    const notification = document.createElement("p");
+                    notification.innerHTML = `
+                        <strong>${book.resourceInfo.title}</strong> returned by <strong>${book.memberInfo.fullname}</strong> is marked as <strong>${book.status}</strong>.
+                        ${book.status === "Damaged" ? "A replacement notification has been issued to the relevant staff member(s)." : "The member has been directed to senior staff members for further procedures."}
+                    `;
+                    notificationMessages.appendChild(notification);
+                }
+            });
+        }
+
+        // Fetch returned books from the API (replace with actual API call)
+        async function fetchReturnedBooks() {
+            try {
+                const accessToken = sessionStorage.getItem("access_token");
+
+                if (!accessToken) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const cleanedToken = accessToken.replace(/^"(.*)"$/, '$1');
+                const response = await fetch("http://127.0.0.1:8000/getreturnedbooks", {
+                    headers: {
+                        "Authorization": `Bearer ${cleanedToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch returned books");
+                }
+
+                const data = await response.json();
+                displayReturnedBooks(data);
+            } catch (error) {
+                console.error("Error fetching returned books:", error);
+                alert("Failed to fetch returned books. Please try again.");
+            }
+        }
+
+        // Print Report Function
+        function printReport() {
+            window.print();
+        }
+
+        // Fetch and display returned books when the page loads
+        fetchReturnedBooks();
+    </script>
+</body>
+</html>

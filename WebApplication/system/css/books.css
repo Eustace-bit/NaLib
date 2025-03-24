@@ -1,0 +1,142 @@
+
+
+/* Form styling */
+
+
+/* Label styling */
+
+
+/* Input field styling */
+#book-form input {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#book-form input:focus {
+    border-color: #007bff;
+    
+}
+
+/* Button styling */
+#book-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#book-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Table header styling */
+thead {
+    background-color: #007bff;
+    color: #fff;
+}
+
+thead th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Table body styling */
+tbody td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+/* Alternate row background color */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Hover effect for table rows */
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Dropdown styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    right: 0;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Edit and delete button styling */
+.edit-button, .delete-button {
+    color: #007bff;
+}
+
+.delete-button {
+    color: #dc3545;
+}
+
+/* Icon styling */
+.fas {
+    margin-right: 5px;
+}
+
+.input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%; /* Adjust as needed */
+}
+
+.icon {
+    position: absolute;
+    left: 10px; /* Adjust as needed */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa; /* Icon color */
+}
+
+input[type="text"] {
+    padding-left: 10px; /* Adjust based on icon size and position */
+    width: 100%; /* Adjust as needed */
+}

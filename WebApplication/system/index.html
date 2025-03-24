@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Home</title>
+    <style>
+        /* General styles */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container for the entire layout */
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Menu section */
+        .menu {
+            width: 250px; /* Fixed width for the menu */
+            background-color: #2c3e50; /* Dark blue background */
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* User info section */
+        .user-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #34495e; /* Slightly darker blue */
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .user-info p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        /* General menu section */
+        .generalmenu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between menu items */
+        }
+
+        .generalmenu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between icon and text */
+        }
+
+        .generalmenu a:hover {
+            background-color: #34495e; /* Slightly darker blue */
+            transform: translateX(5px);
+        }
+
+        .generalmenu a i {
+            font-size: 18px;
+        }
+
+        /* Content menu section */
+        .content-menu {
+            flex: 1; /* Take up remaining space */
+            background-color: #f9f9f9;
+            overflow-y: auto; /* Enable scrolling for content */
+        }
+
+        /* Iframe styling */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .menu {
+                width: 200px; /* Smaller menu for smaller screens */
+            }
+
+            .generalmenu a {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu {
+                width: 60px; /* Collapse menu to icons only */
+            }
+
+            .user-info {
+                display: none; /* Hide user info on small screens */
+            }
+
+            .generalmenu a span {
+                display: none; /* Hide text, show only icons */
+            }
+
+            .generalmenu a {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <div class="user-info">
+                <p id="username">Username: {{username}}</p>
+                <p id="role">Role: {{role}}</p>
+            </div>
+            <div class="generalmenu">
+                <a href="dashboard.html" id="dashboard" target="content-box">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="account.html" id="profile" target="content-box">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="member.html" id="addmember" target="content-box">
+                    <i class="fas fa-users"></i>
+                    <span>Member Management</span>
+                </a>
+                <a href="books.html" id="managebook" target="content-box" style="display: none;">
+                    <i class="fas fa-book"></i>
+                    <span>Manage Books</span>
+                </a>
+                <a href="manageUser.html" id="manageusers" target="content-box" style="display: none;">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Manage Users</span>
+                </a>
+                <a href="issuedBook.html" id="issuedbooks" target="content-box" style="display: none;">
+                    <i class="fas fa-book-open"></i>
+                    <span>Issued Books</span>
+                </a>
+                <a href="lendBooks.html" id="lendbooks" target="content-box" style="display: none;">
+                    <i class="fas fa-hand-holding"></i>
+                    <span>Lend Book</span>
+                </a>
+                <a href="returnedBooks.html" id="returnbooks" target="content-box" style="display: none;">
+                    <i class="fas fa-thumbs-up"></i>
+                    <span>Returned Books</span>
+                </a>
+            </div>
+        </div>
+        <div class="content-menu">
+            <iframe src="dashboard.html" name="content-box" frameborder="0"></iframe>
+        </div>
+    </div>
+    <script>
+        async function getUserInfo() {
+            try {
+                // Check if access_token exists in sessionStorage
+                const accessToken = sessionStorage.getItem("access_token");
+
+                if (!accessToken) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const cleanedToken = accessToken.replace(/^"(.*)"$/, '$1');
+
+                // Fetch user info from the backend
+                const response = await fetch("http://127.0.0.1:8000/userinfo", {
+                    headers: {
+                        "Authorization": `Bearer ${cleanedToken}`
+                    }
+                });
+
+                // Check if the response is OK (status code 200-299)
+                if (!response.ok) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                // Parse the JSON response
+                const userInfo = await response.json();
+
+                // Update the UI with user info
+                document.getElementById("username").innerHTML = `Username: ${userInfo.username}`;
+                document.getElementById("role").innerHTML = `Role: ${userInfo.role}`;
+
+                // Show "Manage Users" link only if the role is "librarymanager"
+                if (userInfo.role === "librarymanager") {
+                    document.getElementById("manageusers").style.display = "flex";
+                    document.getElementById("managebook").style.display = "flex";
+                    document.getElementById("lendbooks").style.display = "flex";
+                    document.getElementById("returnbooks").style.display = "flex";
+                    document.getElementById("issuedbooks").style.display = "flex";
+                }if (userInfo.role === "cataloger") {
+                    document.getElementById("managebook").style.display = "flex";
+                }if (userInfo.role === "librarian") {
+                    document.getElementById("lendbooks").style.display = "flex";
+                    document.getElementById("returnbooks").style.display = "flex";
+                    document.getElementById("issuedbooks").style.display = "flex";
+                }
+            } catch (error) {
+                // Handle errors and display a user-friendly message
+                console.error("Error fetching user info:", error);
+                document.getElementById("username").innerHTML = "Error loading user info.";
+                document.getElementById("role").innerHTML = "Please try again later.";
+            }
+        }
+
+        // Call the function to fetch and display user info
+        getUserInfo();
+    </script>
+</body>
+</html>

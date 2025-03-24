@@ -1,0 +1,97 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container styling */
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Container box styling */
+.container-box {
+    text-align: center;
+}
+
+/* Heading styling */
+.container-box h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Form styling */
+#lend-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Label styling */
+#lend-form label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    text-align: left;
+}
+
+/* Input field styling */
+#lend-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#lend-form input:focus {
+    border-color: #007bff;
+}
+
+/* Button styling */
+#lend-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#lend-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Status message styling */
+#lend-status {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Success message */
+#lend-status.success {
+    color: #28a745;
+}
+
+/* Error message */
+#lend-status.error {
+    color: #dc3545;
+}
+
+
+/* Model */

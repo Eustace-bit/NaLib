@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/signup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- Side Panel -->
+            <div class="sidepanel">
+                <div class="invisible-box"></div>
+                <div class="sidepanel-content">
+                    <div class="header-text">
+                        <p>NaLib</p>
+                    </div>
+                    <div class="sidepanel-subtitle">
+                        <p>To keep connected with us, please sign up with your personal info</p>
+                    </div>
+                    <div class="sidepanel-button">
+                        <button onclick="window.location.href='login.html'">Sign Up</button>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="content-box">
+                <div class="content-text">
+                    <p>Create Account</p>
+                </div>
+                <form id="signup-form">
+                    <div class="box-input">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="box-input">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="box-input">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="repassword" name="repassword" placeholder="Re-enter Password" required>
+                    </div>
+                    <div class="error">
+                        <p id="error"></p>
+                    </div>
+                    <div class="box-input">
+                        <button type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const password = document.getElementById("password").value;
+            const repassword = document.getElementById("repassword").value;
+            const passwordStrength = checkPasswordStrength(password);
+
+            if (password !== repassword) {
+                document.getElementById("error").innerText = "Password does not match";
+                return;
+            }
+
+            if (passwordStrength < 5) {
+                document.getElementById("error").innerText = `Password strength is ${passwordStrength}.`;
+                return;
+            } else {
+                const formData = {
+                    username: document.getElementById("username").value,
+                    password: document.getElementById("password").value,
+                    role: "librarian"
+                };
+
+                const response = await fetch("/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    window.location.href = "login.html";
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById("error").innerText = errorData.detail || "Failed to register";
+                }
+                // console.log(result);
+                // document.getElementById("error").innerText = JSON.stringify(result, null, 2);
+            }
+        });
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[!@#$%^&*]/.test(password)) strength++;
+            return strength;
+        }
+    </script>
+</body>
+</html>

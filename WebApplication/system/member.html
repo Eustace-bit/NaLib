@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Members</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/darkTheme.css">
+    <script src="js/darktTheme.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            color: #333;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+            margin: 5px 0 0;
+        }
+
+        #add-new-button,
+        #export-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        #add-new-button:hover,
+        #export-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Member List Styles */
+        .member-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .member-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .member-card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        .member-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .member-card .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .member-card .actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #007bff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .member-card .actions button:hover {
+            background-color: #f0f2f6;
+        }
+
+        /* Add member model */
+
+        /* Form Styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+}
+
+/* Error Message */
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #007bff;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-body table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .modal-body th,
+        .modal-body td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .modal-body th {
+            background-color: #f9f9f9;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .member-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        :root {
+    --bg-color: #f4f4f9;
+    --card-bg: #fff;
+    --text-color: #333;
+    --accent-color: #007bff;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --modal-bg: #fff;
+    --input-bg: #fff;
+    --input-border: #ccc;
+    --icon-color: #aaa;
+}
+
+.dark-mode {
+    --bg-color: #1e1e2f;
+    --card-bg: #2d2d44;
+    --text-color: #f0f0f0;
+    --accent-color: #00bcd4;
+    --border-color: #444;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --modal-bg: #2d2d44;
+    --input-bg: #3d3d5c;
+    --input-border: #555;
+    --icon-color: #888;
+}
+
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px var(--shadow-color);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Button Styles */
+button {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--accent-color), #0056b3);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #0056b3, #003d80);
+    transform: translateY(-2px);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--modal-bg);
+    padding: 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.modal-header h3 {
+    color: var(--accent-color);
+}
+
+.modal-header .close {
+    color: var(--text-color);
+}
+
+/* Input Styles */
+.input-container input,
+.input-container select {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-color);
+}
+
+.input-container .icon {
+    color: var(--icon-color);
+}
+
+/* Card Styles */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.card h3 {
+    color: var(--accent-color);
+}
+
+.card p {
+    color: var(--text-color);
+}
+
+.card .actions i {
+    color: var(--accent-color);
+}
+
+/* Error Message */
+#error {
+    background: #ffebee;
+    color: #c62828;
+}
+    </style>
+</head>
+<body onload="loadThemePreference();">
+    <div class="container">
+        <div class="header">
+            <h2>Manage Members</h2>
+            <p>Here you can manage all the members in the system.</p>
+            <button id="add-new-button" onclick="openAddMemberForm()">Add New</button>
+
+            <button id="export-button" onclick="exportMemberData()">Export Member Data</button>
+            <button id="theme-toggle-button" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i> Dark Mode
+            </button>
+        </div>
+
+        <div class="member-list" id="member-list">
+            <!-- Member cards will be populated here -->
+        </div>
+
+        <!-- Add Member Modal -->
+        <div id="addMemberModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add a New Member</h2>
+                    <span class="close" onclick="closeModal('addMemberModal')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="add-member-form" onsubmit="addMember(event)">
+                        <div class="form-group">
+                            <label for="fullname">Full Name:</label>
+                            <input type="text" id="fullname" name="fullname" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone:</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" id="address" name="address" placeholder="Enter address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postCode">Post Code:</label>
+                            <input type="text" id="postCode" name="postCode" placeholder="Enter post code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="behaviour">Behaviour:</label>
+                            <input type="text" id="behaviour" name="behaviour" placeholder="Enter behaviour" required>
+                        </div>
+                        <div id="addMemberError" class="error-message"></div>
+                        <button type="submit">Add Member</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Edit History -->
+        <div id="editHistoryModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Member History</h2>
+                    <span class="close" onclick="closeModal('editHistoryModal')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="editHistoryTableBody">
+                            <!-- Rows will be populated here -->
+                        </tbody>
+                    </table>
+                    <div id="editHistoryError" class="error-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMemberId;
+
+        // Fetch and display members
+        async function fetchAndDisplayMembers() {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/listmembers", {
+                    headers: {
+                        "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch members");
+                }
+
+                const members = await response.json();
+                displayMembers(members);
+            } catch (error) {
+                console.error("Error fetching members:", error);
+                showError("Failed to fetch members. Please try again.");
+            }
+        }
+
+        // Display members in the UI
+        function displayMembers(members) {
+            const memberList = document.getElementById("member-list");
+            memberList.innerHTML = ""; // Clear existing content
+
+            members.forEach(member => {
+                const memberCard = document.createElement("div");
+                memberCard.className = "member-card";
+                memberCard.innerHTML = `
+                    <h3>${member.fullname || "N/A"}</h3>
+                    <p><strong>Membership ID:</strong> ${member.membershipID || "N/A"}</p>
+                    <p><strong>Phone:</strong> ${member.phone || "N/A"}</p>
+                    <p><strong>Address:</strong> ${member.address || "N/A"}</p>
+                    <p><strong>Post Code:</strong> ${member.postCode || "N/A"}</p>
+                    <p><strong>Status:</strong> ${member.status || "N/A"}</p>
+                    <p><strong>Enrolled Date:</strong> ${new Intl.DateTimeFormat("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                    }).format(new Date(member.dateEnrolled))}</p>
+                    <div class="actions">
+                        <button onclick="showEditHistory('${member.membershipID}')">
+                            <i class="fa-solid fa-history"></i> Show History
+                        </button>
+                    </div>
+                `;
+                memberList.appendChild(memberCard);
+            });
+        }
+
+        // Open Edit History Modal
+        function showEditHistory(membershipID) {
+            currentMemberId = membershipID;
+            document.getElementById("editHistoryModal").style.display = "flex";
+            document.getElementById("editHistoryError").innerText = ""; // Clear previous errors
+            fetchEditHistory(membershipID);
+        }
+
+        // Close Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Fetch and display edit history
+        async function fetchEditHistory(membershipID) {
+            try {
+                if (!membershipID) {
+                    throw new Error("Invalid membership ID");
+                }
+
+                const response = await fetch(`http://127.0.0.1:8000/get-lendingbehavior/${membershipID}`, {
+                    headers: {
+                        "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "Failed to fetch history");
+                }
+
+                const data = await response.json();
+                displayEditHistory(data);
+            } catch (error) {
+                console.error("Error fetching history:", error);
+                document.getElementById("editHistoryError").innerText = `Error: ${error.message}`;
+            }
+        }
+
+        // Display edit history in the modal
+        function displayEditHistory(data) {
+            const tableBody = document.getElementById("editHistoryTableBody");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            const memberDetails = [
+                { field: "Full Name", value: data.message.split(",")[0].replace("Member Details: ", "") },
+                { field: "Status", value: data.message.split(",")[1].replace("Status: ", "").trim() },
+                { field: "Date Enrolled", value: data.message.split(",")[2].replace("Date Enrolled: ", "").trim() }
+            ];
+
+            memberDetails.forEach(detail => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${detail.field}</td>
+                    <td>${detail.value}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            const lendingBehavior = [
+                { field: "Overdue Count", value: data.lendingBehavior.overdueCount },
+                { field: "Preferences", value: data.lendingBehavior.preferences.join(", ") || "None" }
+            ];
+
+            lendingBehavior.forEach(behavior => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${behavior.field}</td>
+                    <td>${behavior.value}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-message";
+            errorDiv.innerText = message;
+            document.body.appendChild(errorDiv);
+        }
+
+        // Open Add Member Modal
+function openAddMemberForm() {
+    document.getElementById("addMemberModal").style.display = "flex";
+    document.getElementById("addMemberError").innerText = ""; // Clear previous errors
+    document.getElementById("add-member-form").reset(); // Reset the form
+}
+
+// Add Member Function
+async function addMember(event) {
+    event.preventDefault(); // Prevent form submission
+
+    const formData = {
+        fullname: document.getElementById("fullname").value,
+        membershipID: "Member" + Math.floor(1000 + Math.random() * 9000).toString() + (Math.random().toString(36).substr(2, 2)).toUpperCase(),
+        phone: document.getElementById("phone").value,
+        address: document.getElementById("address").value,
+        postCode: document.getElementById("postCode").value,
+        behaviour: document.getElementById("behaviour").value,
+        memberstatus : "active"
+    };
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/addmember", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || "Failed to add member");
+        }
+
+        // Close the modal and refresh the member list
+        closeModal("addMemberModal");
+        fetchAndDisplayMembers();
+    } catch (error) {
+        console.error("Error adding member:", error);
+        document.getElementById("addMemberError").innerText = `Error: ${error.message}`;
+    }
+}
+
+        // Fetch and display members when the page loads
+        fetchAndDisplayMembers();
+
+
+async function exportMemberData() {
+            try {
+                const accessToken = sessionStorage.getItem("access_token");
+        
+                // console.log(accessToken);
+                if (!accessToken) {
+                    // throw new Error("No access token found. Please log in.");
+                    window.location.href = "login.html";
+
+                }
+
+                const cleanedToken = accessToken.replace(/^"(.*)"$/, '$1');
+
+      
+                const response = await fetch("http://127.0.0.1:8000/listmembers", {
+                    headers: {
+                        "Authorization": `Bearer ${cleanedToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch members for export");
+                }
+
+                const members = await response.json();
+
+                // Convert members data to CSV format
+                const csvContent = "data:text/csv;charset=utf-8," +
+                    "Full Name,Membership ID,Phone,Address,Post Code,Status,Enrolled Date\n" +
+                    members.map(member => 
+                        `"${member.fullname || ""}","${member.membershipID || ""}","${member.phone || ""}","${member.address || ""}","${member.postCode || ""}","${member.status || ""}","${new Intl.DateTimeFormat("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        }).format(new Date(member.dateEnrolled))}"`
+                    ).join("\n");
+
+                // Create a download link
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "members_data.csv");
+                document.body.appendChild(link);
+                link.click(); // Trigger the download
+                document.body.removeChild(link); // Clean up
+            } catch (error) {
+                console.error("Error exporting member data:", error);
+                alert("Failed to export member data. Please try again.");
+            }
+        }
+
+        // Fetch and display members when the page loads
+    </script>
+</body>
+</html>

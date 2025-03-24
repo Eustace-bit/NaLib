@@ -1,0 +1,320 @@
+/* General styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   /* height: 100vh;*/
+}
+
+/* Container for the entire layout */
+.container {
+    display: flex;
+    /*width: 80%; /* 80% of the screen width */
+   /* max-width: 1200px; /* Maximum width */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Left content section */
+.content {
+    flex: 1; /* Take up 1 part of the space */
+    background-color: #007bff; /* Blue background */
+    color: #fff;
+    padding: 20px;
+}
+
+/* User info section */
+.user-info {
+    margin-bottom: 20px;
+}
+
+.user-info p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+/* General menu section */
+.generalmenu {
+    display: flex;
+    flex-direction: column;
+}
+
+.generalmenu a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.generalmenu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Right content-menu section */
+.content-menu {
+    flex: 3; /* Take up 3 parts of the space */
+    padding: 20px;
+}
+
+/* Content box section */
+.content-box {
+    width: 100%;
+}
+
+/* Box container for stats */
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; /* Space between boxes */
+}
+
+/* Individual box styles */
+.box {
+    flex: 1;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Number in the box */
+.box .number {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* Icon in the box */
+.box i {
+    font-size: 30px;
+    color: #007bff;
+    margin: 10px 0;
+}
+
+/* Name in the box */
+.box .name {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Profile content */
+.profile-content {
+    padding: 20px;
+}
+
+.profile-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.profile-content p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+/* Add member form */
+.addmember-content {
+    padding: 20px;
+}
+
+.addmember-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.addmember-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.addmember-content input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.addmember-content button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addmember-content button:hover {
+    background-color: #0056b3;
+}
+
+/* Container for the form */
+#add-member-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for each input box */
+.box-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+/* Icon styling */
+.box-input i {
+    color: #888;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* Input field styling */
+.box-input input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background-color: transparent;
+}
+
+/* Placeholder styling */
+.box-input input::placeholder {
+    color: #aaa;
+}
+
+/* Submit button styling */
+#add-member-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-member-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Manage books and users content */
+.managebook-content, .manageusers-content, .issuedbooks-content {
+    padding: 20px;
+}
+
+.managebook-content h2, .manageusers-content h2, .issuedbooks-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.managebook-content p, .manageusers-content p, .issuedbooks-content p {
+    font-size: 16px;
+}
+
+/* Manage book content */
+.managebook-content {
+    padding: 20px;
+}
+
+.managebook-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Add book form */
+.add-book-form {
+    margin-bottom: 20px;
+}
+
+.add-book-form h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.add-book-form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.add-book-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.add-book-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-book-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Book list */
+.book-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.book-list th, .book-list td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.book-list th {
+    background-color: #f0f0f0;
+}
+
+.book-list button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.book-list button:hover {
+    background-color: #218838;
+}
+
+.book-list button:last-child {
+    background-color: #dc3545;
+}
+
+.book-list button:last-child:hover {
+    background-color: #c82333;
+}

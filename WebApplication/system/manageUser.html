@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            color: #333;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+            margin: 5px 0 0;
+        }
+
+        /* User List Styles */
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        .user-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .user-card .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .user-card .actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #007bff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-card .actions button:hover {
+            background-color: #f0f2f6;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #007bff;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus {
+            border-color: #007bff;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .user-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Manage Users</h2>
+            <p>Here you can manage all the users in the system.</p>
+        </div>
+
+        <div class="user-list" id="user-list">
+            <!-- User cards will be populated here -->
+        </div>
+
+        <!-- Change Role Modal -->
+        <div id="changeRoleModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Change User Role</h2>
+                    <span class="close" onclick="closeModal('changeRoleModal')">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="change-role-form" onsubmit="changeRole(event)">
+                        <div class="form-group">
+                            <label for="role">Select Role:</label>
+                            <select id="role" name="role" required>
+                                <option value="librarian">Librarian</option>
+                                <option value="cataloger">Cataloger</option>
+                                <option value="librarymanager">Library Manager</option>
+                            </select>
+                        </div>
+                        <div id="changeRoleError" class="error-message"></div>
+                        <button type="submit">Update Role</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUserId;
+
+        // Fetch and display users
+        async function fetchUsers() {
+            try {
+                const accessToken = sessionStorage.getItem("access_token");
+        
+                // console.log(accessToken);
+                if (!accessToken) {
+                    // throw new Error("No access token found. Please log in.");
+                    window.location.href = "login.html";
+
+                }
+
+                const cleanedToken = accessToken.replace(/^"(.*)"$/, '$1');
+                const response = await fetch("http://127.0.0.1:8000/listusers", {
+                    headers: {
+                        "Authorization": `Bearer ${cleanedToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch users");
+                }
+
+                const users = await response.json();
+                displayUsers(users);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                alert("Failed to fetch users. Please try again.");
+            }
+        }
+
+        // Display users in the UI
+        function displayUsers(users) {
+    const userList = document.getElementById("user-list");
+    userList.innerHTML = ""; // Clear existing content
+
+    // After successful login
+    sessionStorage.setItem("userRole", "librarymanager"); // Replace with the actual role from the login response
+    // Get the logged-in user's role from sessionStorage
+    const loggedInUserRole = sessionStorage.getItem("userRole");
+
+    users.forEach(user => {
+        const userCard = document.createElement("div");
+        userCard.className = "user-card";
+        userCard.innerHTML = `
+            <h3>${user.fullname || "N/A"}</h3>
+            <p><strong>Username:</strong> ${user.username || "N/A"}</p>
+            <p><strong>Email:</strong> ${user.email || "N/A"}</p>
+            <p><strong>Role:</strong> ${user.role || "N/A"}</p>
+            <p><strong>Qualification:</strong> ${user.qualification || "N/A"}</p>
+            <p><strong>Experience:</strong> ${user.experience || "N/A"}</p>
+            <p><strong>Skill Set:</strong> ${user.skillSet || "N/A"}</p>
+            <p><strong>Grade:</strong> ${user.grade || "N/A"}</p>
+            <p><strong>Contact:</strong> ${user.contact || "N/A"}</p>
+            <p><strong>Responsibility:</strong> ${user.responsibilities || "N/A"}</p>
+            <div class="actions">
+                
+                ${loggedInUserRole === "librarymanager" ? `
+                    <button onclick="openChangeRoleModal('${user.username}')">
+                        <i class="fa-solid fa-edit"></i> Change Role
+                    </button>
+                ` : ""}
+                
+            </div>
+        `;
+        userList.appendChild(userCard);
+    });
+}
+        // Open Change Role Modal
+        function openChangeRoleModal(userId) {
+            currentUserId = userId;
+            document.getElementById("changeRoleModal").style.display = "flex";
+            document.getElementById("changeRoleError").innerText = ""; // Clear previous errors
+        }
+
+        // Close Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Change Role Function
+        async function changeRole(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const role = document.getElementById("role").value;
+
+            const formData = {
+                username: currentUserId,
+                role : role
+            };
+
+            try {
+                const accessToken = sessionStorage.getItem("access_token");
+        
+                // console.log(accessToken);
+                if (!accessToken) {
+                    // throw new Error("No access token found. Please log in.");
+                    window.location.href = "login.html";
+
+                }
+
+                const cleanedToken = accessToken.replace(/^"(.*)"$/, '$1');
+                const response = await fetch("http://127.0.0.1:8000/editrole", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${cleanedToken}`
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "Failed to change role");
+                }
+
+                // Close the modal and refresh the user list
+                closeModal("changeRoleModal");
+                fetchUsers();
+            } catch (error) {
+                console.error("Error changing role:", error);
+                document.getElementById("changeRoleError").innerText = `Error: ${error.message}`;
+            }
+        }
+
+        // Fetch and display users when the page loads
+        fetchUsers();
+    </script>
+</body>
+</html>
