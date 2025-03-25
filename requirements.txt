@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+psycopg2
+pymongo
+sqlalchemy
+mongoengine
+motor
+passlib
+python-jose[jwt]
